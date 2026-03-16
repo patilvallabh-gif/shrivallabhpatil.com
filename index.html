@@ -3,310 +3,408 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Market Ticker — shrivallabhpatil.com</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+<title>Shri Vallabh Patil — Market Pulse</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --bg:        #0c0e12;
-    --surface:   #13161d;
-    --border:    #1e2330;
-    --muted:     #3a404f;
-    --text:      #cdd4e0;
-    --dim:       #5e6678;
-    --accent:    #c9a96e;   /* warm gold */
-    --up:        #4fc98e;
-    --down:      #e05c5c;
-    --glow:      rgba(201,169,110,0.12);
-  }
+:root {
+  --bg:      #0b0d11;
+  --surface: #111318;
+  --surface2:#161920;
+  --border:  #1c2030;
+  --muted:   #2e3445;
+  --dim:     #4a5268;
+  --text:    #c8d0df;
+  --soft:    #8a95a8;
+  --gold:    #c9a96e;
+  --gold2:   #e8c98a;
+  --up:      #4fc98e;
+  --down:    #e05c5c;
+  --up-bg:   rgba(79,201,142,0.08);
+  --down-bg: rgba(224,92,92,0.08);
+}
 
-  body {
-    background: var(--bg);
-    font-family: 'DM Mono', monospace;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem 1rem;
-  }
+html { scroll-behavior: smooth; }
 
-  /* ── Header ── */
-  .site-header {
-    text-align: center;
-    margin-bottom: 3rem;
-  }
-  .site-header h1 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 500;
-    font-size: clamp(1.6rem, 4vw, 2.6rem);
-    color: var(--accent);
-    letter-spacing: 0.02em;
-    line-height: 1;
-  }
-  .site-header p {
-    font-size: 0.72rem;
-    color: var(--dim);
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    margin-top: 0.5rem;
-  }
+body {
+  background: var(--bg);
+  font-family: 'DM Mono', monospace;
+  min-height: 100vh;
+  padding: 3rem 1.5rem 4rem;
+  background-image:
+    radial-gradient(ellipse 80% 40% at 50% -10%, rgba(201,169,110,0.06) 0%, transparent 70%);
+}
 
-  /* ── Ticker wrapper ── */
-  .ticker-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1.25rem;
-    width: 100%;
-    max-width: 860px;
-  }
+/* ── HEADER ───────────────────────────────── */
+.header {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+.header-eyebrow {
+  font-size: 0.6rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.75rem;
+  opacity: 0.8;
+}
+.header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 600;
+  color: #e8ecf4;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+.header h1 em {
+  font-style: italic;
+  color: var(--gold);
+}
+.header-sub {
+  margin-top: 0.8rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
 
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.5rem 1.6rem 1.4rem;
-    position: relative;
-    overflow: hidden;
-    transition: border-color 0.3s, box-shadow 0.3s;
-  }
-  .card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at 60% 0%, var(--glow) 0%, transparent 60%);
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.4s;
-  }
-  .card:hover { border-color: var(--accent); box-shadow: 0 0 28px var(--glow); }
-  .card:hover::before { opacity: 1; }
+/* ── SECTION LABEL ────────────────────────── */
+.section {
+  max-width: 1100px;
+  margin: 0 auto 2.5rem;
+}
+.section-title {
+  font-size: 0.58rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--dim);
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+.section-title span {
+  display: inline-block;
+  width: 18px;
+  height: 1px;
+  background: var(--gold);
+  opacity: 0.6;
+}
 
-  /* corner accent line */
-  .card-accent {
-    position: absolute;
-    top: 0; left: 0;
-    width: 3px; height: 48px;
-    border-radius: 0 0 2px 0;
-    background: linear-gradient(to bottom, var(--accent), transparent);
-  }
+/* ── GRID ─────────────────────────────────── */
+.grid-4 { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1rem; }
+.grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1rem; }
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1rem; }
 
-  .card-label {
-    font-size: 0.62rem;
-    letter-spacing: 0.20em;
-    text-transform: uppercase;
-    color: var(--dim);
-    margin-bottom: 0.5rem;
-  }
-  .card-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 1rem;
-    color: var(--text);
-    margin-bottom: 1rem;
-    font-weight: 400;
-  }
+/* ── CARD ─────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.4rem 1.5rem 1.3rem;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  cursor: default;
+}
+.card:hover {
+  border-color: rgba(201,169,110,0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(201,169,110,0.06);
+}
+.card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201,169,110,0.3), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.card:hover::after { opacity: 1; }
 
-  .card-value {
-    font-size: 2rem;
-    font-weight: 500;
-    color: #eef1f6;
-    letter-spacing: -0.02em;
-    line-height: 1;
-    transition: color 0.5s;
-  }
-  .card-unit {
-    display: inline-block;
-    font-size: 0.75rem;
-    color: var(--dim);
-    margin-left: 4px;
-    vertical-align: bottom;
-    margin-bottom: 3px;
-  }
+/* left accent bar */
+.card-bar {
+  position: absolute;
+  left: 0; top: 20%; bottom: 20%;
+  width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  opacity: 0.5;
+}
 
-  .card-change {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 0.78rem;
-    font-weight: 500;
-    margin-top: 0.65rem;
-    padding: 2px 8px;
-    border-radius: 20px;
-  }
-  .card-change.up   { color: var(--up);   background: rgba(79,201,142,.10); }
-  .card-change.down { color: var(--down); background: rgba(224,92,92,.10); }
-  .card-change svg { width: 10px; height: 10px; }
+.card-category {
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 0.3rem;
+}
+.card-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.92rem;
+  color: var(--soft);
+  margin-bottom: 1.1rem;
+  font-weight: 400;
+}
 
-  .card-time {
-    position: absolute;
-    bottom: 1rem; right: 1.2rem;
-    font-size: 0.58rem;
-    color: var(--muted);
-    font-style: italic;
-  }
+.card-price {
+  font-size: 1.75rem;
+  font-weight: 500;
+  color: #e8ecf4;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  min-height: 2rem;
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.card-price .unit {
+  font-size: 0.65rem;
+  color: var(--dim);
+  font-weight: 300;
+  letter-spacing: 0.05em;
+}
 
-  /* ── Skeleton loader ── */
-  .skeleton {
-    display: inline-block;
-    background: linear-gradient(90deg, var(--border) 25%, var(--muted) 50%, var(--border) 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.6s infinite;
-    border-radius: 4px;
-    height: 1em;
-    width: 7ch;
-  }
-  @keyframes shimmer { to { background-position: -200% 0; } }
+.card-change {
+  margin-top: 0.7rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 3px 9px;
+  border-radius: 20px;
+  min-height: 22px;
+}
+.card-change.up   { color: var(--up);   background: var(--up-bg); }
+.card-change.down { color: var(--down); background: var(--down-bg); }
+.card-change.neutral { color: var(--dim); background: var(--muted); }
 
-  /* ── Footer ── */
-  .footer {
-    margin-top: 2.5rem;
-    font-size: 0.6rem;
-    color: var(--muted);
-    letter-spacing: 0.1em;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
-  }
-  .footer-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--border); }
-  .refresh-btn {
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--dim);
-    font-family: 'DM Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
-    padding: 4px 10px;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: border-color 0.2s, color 0.2s;
-  }
-  .refresh-btn:hover { border-color: var(--accent); color: var(--accent); }
+.card-time {
+  position: absolute;
+  bottom: 0.8rem; right: 1rem;
+  font-size: 0.55rem;
+  color: var(--muted);
+  font-style: italic;
+}
 
-  /* flash animation on update */
-  @keyframes flash-up   { 0%,100%{color:#eef1f6} 30%{color:var(--up)} }
-  @keyframes flash-down { 0%,100%{color:#eef1f6} 30%{color:var(--down)} }
-  .flash-up   { animation: flash-up   1s ease; }
-  .flash-down { animation: flash-down 1s ease; }
+/* ── SKELETON ─────────────────────────────── */
+.skel {
+  display: inline-block;
+  background: linear-gradient(90deg, var(--border) 25%, var(--muted) 50%, var(--border) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.8s infinite;
+  border-radius: 4px;
+  height: 1.75rem;
+  width: 8ch;
+  vertical-align: middle;
+}
+.skel-sm { height: 0.7rem; width: 5ch; }
+@keyframes shimmer { to { background-position: -200% 0; } }
+
+/* ── FOOTER ───────────────────────────────── */
+.footer {
+  max-width: 1100px;
+  margin: 2rem auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--border);
+}
+.footer-left {
+  font-size: 0.58rem;
+  color: var(--dim);
+  letter-spacing: 0.08em;
+}
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+#status {
+  font-size: 0.58rem;
+  color: var(--dim);
+}
+.refresh-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--soft);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  padding: 5px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.refresh-btn:hover { border-color: var(--gold); color: var(--gold); }
+.refresh-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── FLASH ANIMATIONS ─────────────────────── */
+@keyframes flash-up   { 0%,100%{color:#e8ecf4} 40%{color:var(--up)} }
+@keyframes flash-down { 0%,100%{color:#e8ecf4} 40%{color:var(--down)} }
+.flash-up   { animation: flash-up   1.2s ease; }
+.flash-down { animation: flash-down 1.2s ease; }
+
+/* ── FADE IN ──────────────────────────────── */
+@keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:none; } }
+.card { animation: fadeUp 0.5s ease both; }
+.card:nth-child(1){animation-delay:.05s} .card:nth-child(2){animation-delay:.10s}
+.card:nth-child(3){animation-delay:.15s} .card:nth-child(4){animation-delay:.20s}
+
+/* ── RESPONSIVE ───────────────────────────── */
+@media(max-width:600px){
+  body { padding: 2rem 1rem 3rem; }
+  .header h1 { font-size: 1.8rem; }
+  .card-price { font-size: 1.45rem; }
+}
 </style>
 </head>
 <body>
 
-<header class="site-header">
-  <h1>Shri Vallabh Patil</h1>
-  <p>Market Pulse</p>
+<header class="header">
+  <div class="header-eyebrow">Market Pulse</div>
+  <h1>Shri Vallabh <em>Patil</em></h1>
+  <div class="header-sub">Live Market Data</div>
 </header>
 
-<div class="ticker-grid" id="tickerGrid">
-
-  <!-- Crude Oil -->
-  <div class="card" id="card-crude">
-    <div class="card-accent"></div>
-    <div class="card-label">Commodity</div>
-    <div class="card-name">Crude Oil (WTI)</div>
-    <div class="card-value" id="crude-price"><span class="skeleton">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
-    <span class="card-unit">USD / bbl</span>
-    <div id="crude-change"></div>
-    <div class="card-time" id="crude-time"></div>
+<!-- INDIAN MARKETS -->
+<div class="section">
+  <div class="section-title"><span></span>Indian Markets<span></span></div>
+  <div class="grid-4" id="grid-india">
+    <div class="card" id="card-nsei">  <div class="card-bar"></div><div class="card-category">Index</div><div class="card-name">Nifty 50</div>       <div class="card-price" id="p-nsei"><span class="skel"></span></div><div id="c-nsei"></div><div class="card-time" id="t-nsei"></div></div>
+    <div class="card" id="card-bsesn"><div class="card-bar"></div><div class="card-category">Index</div><div class="card-name">Sensex</div>         <div class="card-price" id="p-bsesn"><span class="skel"></span></div><div id="c-bsesn"></div><div class="card-time" id="t-bsesn"></div></div>
+    <div class="card" id="card-inr">  <div class="card-bar"></div><div class="card-category">Currency</div><div class="card-name">USD / INR</div>   <div class="card-price" id="p-inr"><span class="skel"></span></div><div id="c-inr"></div><div class="card-time" id="t-inr"></div></div>
+    <div class="card" id="card-gsec"> <div class="card-bar"></div><div class="card-category">Rate</div><div class="card-name">India 10Y G-Sec</div> <div class="card-price" id="p-gsec"><span class="skel"></span></div><div id="c-gsec"></div><div class="card-time" id="t-gsec"></div></div>
   </div>
+</div>
 
-  <!-- USD / INR -->
-  <div class="card" id="card-fx">
-    <div class="card-accent"></div>
-    <div class="card-label">Currency</div>
-    <div class="card-name">USD / INR</div>
-    <div class="card-value" id="fx-price"><span class="skeleton">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
-    <span class="card-unit">₹</span>
-    <div id="fx-change"></div>
-    <div class="card-time" id="fx-time"></div>
+<!-- GLOBAL MARKETS -->
+<div class="section">
+  <div class="section-title"><span></span>Global Markets<span></span></div>
+  <div class="grid-2" id="grid-global">
+    <div class="card" id="card-sp">  <div class="card-bar"></div><div class="card-category">Index</div><div class="card-name">S&amp;P 500</div><div class="card-price" id="p-sp"><span class="skel"></span></div><div id="c-sp"></div><div class="card-time" id="t-sp"></div></div>
+    <div class="card" id="card-nsdq"><div class="card-bar"></div><div class="card-category">Index</div><div class="card-name">Nasdaq</div>  <div class="card-price" id="p-nsdq"><span class="skel"></span></div><div id="c-nsdq"></div><div class="card-time" id="t-nsdq"></div></div>
   </div>
+</div>
 
-  <!-- 10Y G-Sec -->
-  <div class="card" id="card-gsec">
-    <div class="card-accent"></div>
-    <div class="card-label">Sovereign Rate</div>
-    <div class="card-name">India 10Y G-Sec</div>
-    <div class="card-value" id="gsec-price"><span class="skeleton">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
-    <span class="card-unit">% yield</span>
-    <div id="gsec-change"></div>
-    <div class="card-time" id="gsec-time"></div>
+<!-- COMMODITIES -->
+<div class="section">
+  <div class="section-title"><span></span>Commodities<span></span></div>
+  <div class="grid-3" id="grid-comm">
+    <div class="card" id="card-gold">  <div class="card-bar"></div><div class="card-category">Commodity</div><div class="card-name">Gold</div>             <div class="card-price" id="p-gold"><span class="skel"></span></div><div id="c-gold"></div><div class="card-time" id="t-gold"></div></div>
+    <div class="card" id="card-silver"><div class="card-bar"></div><div class="card-category">Commodity</div><div class="card-name">Silver</div>           <div class="card-price" id="p-silver"><span class="skel"></span></div><div id="c-silver"></div><div class="card-time" id="t-silver"></div></div>
+    <div class="card" id="card-crude"> <div class="card-bar"></div><div class="card-category">Commodity</div><div class="card-name">Crude Oil (WTI)</div> <div class="card-price" id="p-crude"><span class="skel"></span></div><div id="c-crude"></div><div class="card-time" id="t-crude"></div></div>
   </div>
-
 </div>
 
 <div class="footer">
-  <span>Data via Yahoo Finance</span>
-  <span class="footer-dot"></span>
-  <span id="last-updated">Fetching…</span>
-  <span class="footer-dot"></span>
-  <button class="refresh-btn" onclick="fetchAll()">↻ Refresh</button>
+  <div class="footer-left">Data via Yahoo Finance &nbsp;·&nbsp; Prices delayed ~15 min</div>
+  <div class="footer-right">
+    <span id="status">Fetching…</span>
+    <button class="refresh-btn" id="refreshBtn" onclick="fetchAll()">↻ Refresh</button>
+  </div>
 </div>
 
 <script>
-// ── Proxy-free Yahoo Finance v8 quote fetch ─────────────────────────────────
-// We use a CORS-open proxy (allorigins) to hit the Yahoo Finance chart endpoint.
-// Tickers:  CL=F (WTI crude), INR=X (USDINR), NIFTYGS10YR.NS (10Y G-Sec)
+// ── Ticker config ────────────────────────────────────────────────────────────
+const TICKERS = [
+  // id        symbol           priceId    changeId  timeId   dp  unit
+  ['nsei',   '^NSEI',          'p-nsei',  'c-nsei',  't-nsei',  0, ''],
+  ['bsesn',  '^BSESN',         'p-bsesn', 'c-bsesn', 't-bsesn', 0, ''],
+  ['inr',    'INR=X',          'p-inr',   'c-inr',   't-inr',   2, 'USD/INR'],
+  ['gsec',   '^IN10YT=RR',     'p-gsec',  'c-gsec',  't-gsec',  3, '% yield'],
+  ['sp',     '^GSPC',          'p-sp',    'c-sp',    't-sp',    2, ''],
+  ['nsdq',   '^IXIC',          'p-nsdq',  'c-nsdq',  't-nsdq',  2, ''],
+  ['gold',   'GC=F',           'p-gold',  'c-gold',  't-gold',  2, 'USD/oz'],
+  ['silver', 'SI=F',           'p-silver','c-silver', 't-silver',3, 'USD/oz'],
+  ['crude',  'CL=F',           'p-crude', 'c-crude',  't-crude', 2, 'USD/bbl'],
+];
 
-const TICKERS = {
-  crude: { symbol: 'CL=F',           priceEl: 'crude-price', changeEl: 'crude-change', timeEl: 'crude-time', dp: 2 },
-  fx:    { symbol: 'INR=X',          priceEl: 'fx-price',    changeEl: 'fx-change',    timeEl: 'fx-time',    dp: 2 },
-  gsec:  { symbol: 'NIFTYGS10YR.NS', priceEl: 'gsec-price',  changeEl: 'gsec-change',  timeEl: 'gsec-time',  dp: 4 },
-};
-
-const fmt = (n, dp) => n.toLocaleString('en-IN', { minimumFractionDigits: dp, maximumFractionDigits: dp });
-
-function changeHTML(chg, pct) {
-  const up = chg >= 0;
-  const cls = up ? 'up' : 'down';
-  const arrow = up
-    ? `<svg viewBox="0 0 10 10" fill="none"><polyline points="2,7 5,3 8,7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`
-    : `<svg viewBox="0 0 10 10" fill="none"><polyline points="2,3 5,7 8,3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-  const sign = up ? '+' : '';
-  return `<span class="card-change ${cls}">${arrow} ${sign}${chg.toFixed(2)} (${sign}${pct.toFixed(2)}%)</span>`;
+// ── Helpers ──────────────────────────────────────────────────────────────────
+function fmtNum(n, dp) {
+  if (n >= 1000) return n.toLocaleString('en-IN', {minimumFractionDigits: dp, maximumFractionDigits: dp});
+  return n.toFixed(dp);
 }
 
-async function fetchTicker(key) {
-  const t = TICKERS[key];
-  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(t.symbol)}?interval=1d&range=1d`;
-  const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+function arrowSVG(up) {
+  return up
+    ? `<svg width="9" height="9" viewBox="0 0 10 10" fill="none"><polyline points="2,7 5,2 8,7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+    : `<svg width="9" height="9" viewBox="0 0 10 10" fill="none"><polyline points="2,3 5,8 8,3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
 
-  const res  = await fetch(proxy);
+function changeHTML(chg, pct) {
+  const up  = chg >= 0;
+  const cls = up ? 'up' : 'down';
+  const sgn = up ? '+' : '';
+  return `<span class="card-change ${cls}">${arrowSVG(up)} ${sgn}${chg.toFixed(2)} (${sgn}${pct.toFixed(2)}%)</span>`;
+}
+
+// ── Fetch one ticker via allorigins CORS proxy → Yahoo Finance v8 ────────────
+async function fetchTicker([id, symbol, pId, cId, tId, dp, unit]) {
+  const yUrl  = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1d&range=2d`;
+  const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(yUrl)}`;
+
+  const res  = await fetch(proxy, {cache: 'no-store'});
   const wrap = await res.json();
   const data = JSON.parse(wrap.contents);
 
-  const meta  = data.chart.result[0].meta;
+  const result = data.chart.result[0];
+  const meta   = result.meta;
+
+  // price
   const price = meta.regularMarketPrice;
-  const prev  = meta.chartPreviousClose || meta.previousClose;
+  // previous close — try multiple fields
+  const prev  = meta.chartPreviousClose ?? meta.previousClose ?? meta.regularMarketPreviousClose;
   const chg   = price - prev;
   const pct   = (chg / prev) * 100;
 
-  const priceEl  = document.getElementById(t.priceEl);
-  const changeEl = document.getElementById(t.changeEl);
-  const timeEl   = document.getElementById(t.timeEl);
+  // timestamp
+  const ts  = new Date(meta.regularMarketTime * 1000);
+  const tStr = ts.toLocaleTimeString('en-IN', {hour: '2-digit', minute: '2-digit', timeZoneName: 'short'});
 
-  // flash color hint
-  const cls = chg >= 0 ? 'flash-up' : 'flash-down';
-  priceEl.classList.remove('flash-up','flash-down');
-  void priceEl.offsetWidth; // reflow
-  priceEl.classList.add(cls);
+  // update DOM
+  const pEl = document.getElementById(pId);
+  const cEl = document.getElementById(cId);
+  const tEl = document.getElementById(tId);
 
-  priceEl.textContent  = fmt(price, t.dp);
-  changeEl.innerHTML   = changeHTML(chg, pct);
+  // flash
+  pEl.classList.remove('flash-up','flash-down');
+  void pEl.offsetWidth;
+  pEl.classList.add(chg >= 0 ? 'flash-up' : 'flash-down');
 
-  const ts = new Date(meta.regularMarketTime * 1000);
-  const timeStr = ts.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' });
-  timeEl.textContent = timeStr;
+  pEl.innerHTML = fmtNum(price, dp) + (unit ? `<span class="unit">${unit}</span>` : '');
+  cEl.innerHTML = changeHTML(chg, pct);
+  tEl.textContent = tStr;
 }
 
+// ── Fetch all ────────────────────────────────────────────────────────────────
 async function fetchAll() {
-  document.getElementById('last-updated').textContent = 'Updating…';
-  await Promise.allSettled(Object.keys(TICKERS).map(fetchTicker));
-  const now = new Date().toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' });
-  document.getElementById('last-updated').textContent = `Updated ${now}`;
+  const btn = document.getElementById('refreshBtn');
+  btn.disabled = true;
+  document.getElementById('status').textContent = 'Updating…';
+
+  const results = await Promise.allSettled(TICKERS.map(fetchTicker));
+
+  // report any failures quietly in console
+  results.forEach((r, i) => {
+    if (r.status === 'rejected') console.warn(`Failed: ${TICKERS[i][1]}`, r.reason);
+  });
+
+  const now = new Date().toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit'});
+  document.getElementById('status').textContent = `Last updated ${now}`;
+  btn.disabled = false;
 }
 
-// Initial load + auto-refresh every 5 minutes
+// ── Init + auto-refresh every 5 min ─────────────────────────────────────────
 fetchAll();
 setInterval(fetchAll, 5 * 60 * 1000);
 </script>
