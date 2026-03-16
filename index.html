@@ -9,259 +9,124 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:      #0b0d11;
-  --surface: #111318;
-  --surface2:#161920;
-  --border:  #1c2030;
-  --muted:   #2e3445;
-  --dim:     #4a5268;
-  --text:    #c8d0df;
-  --soft:    #8a95a8;
-  --gold:    #c9a96e;
-  --gold2:   #e8c98a;
-  --up:      #4fc98e;
-  --down:    #e05c5c;
-  --up-bg:   rgba(79,201,142,0.08);
-  --down-bg: rgba(224,92,92,0.08);
+  --bg:       #0b0d11;
+  --surface:  #111318;
+  --border:   #1c2030;
+  --muted:    #2e3445;
+  --dim:      #4a5268;
+  --soft:     #8a95a8;
+  --gold:     #c9a96e;
+  --up:       #4fc98e;
+  --down:     #e05c5c;
+  --up-bg:    rgba(79,201,142,0.08);
+  --down-bg:  rgba(224,92,92,0.08);
 }
-
-html { scroll-behavior: smooth; }
 
 body {
   background: var(--bg);
   font-family: 'DM Mono', monospace;
   min-height: 100vh;
   padding: 3rem 1.5rem 4rem;
-  background-image:
-    radial-gradient(ellipse 80% 40% at 50% -10%, rgba(201,169,110,0.06) 0%, transparent 70%);
+  background-image: radial-gradient(ellipse 80% 40% at 50% -10%, rgba(201,169,110,0.06) 0%, transparent 70%);
 }
 
-/* ── HEADER ───────────────────────────────── */
-.header {
-  text-align: center;
-  margin-bottom: 3.5rem;
-}
-.header-eyebrow {
-  font-size: 0.6rem;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 0.75rem;
-  opacity: 0.8;
-}
-.header h1 {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(2rem, 5vw, 3.2rem);
-  font-weight: 600;
-  color: #e8ecf4;
-  line-height: 1;
-  letter-spacing: -0.01em;
-}
-.header h1 em {
-  font-style: italic;
-  color: var(--gold);
-}
-.header-sub {
-  margin-top: 0.8rem;
-  font-size: 0.65rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--dim);
-}
+/* HEADER */
+.header { text-align: center; margin-bottom: 3.5rem; }
+.header-eyebrow { font-size: 0.6rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.75rem; opacity: 0.8; }
+.header h1 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 600; color: #e8ecf4; line-height: 1; }
+.header h1 em { font-style: italic; color: var(--gold); }
+.header-sub { margin-top: 0.8rem; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim); }
 
-/* ── SECTION LABEL ────────────────────────── */
-.section {
-  max-width: 1100px;
-  margin: 0 auto 2.5rem;
-}
+/* SECTION */
+.section { max-width: 1100px; margin: 0 auto 2.5rem; }
 .section-title {
-  font-size: 0.58rem;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--dim);
-  padding-bottom: 0.6rem;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 1.1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
+  font-size: 0.58rem; letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--dim); padding-bottom: 0.6rem; border-bottom: 1px solid var(--border);
+  margin-bottom: 1.1rem; display: flex; align-items: center; gap: 0.7rem;
 }
-.section-title span {
-  display: inline-block;
-  width: 18px;
-  height: 1px;
-  background: var(--gold);
-  opacity: 0.6;
-}
+.section-title span { display: inline-block; width: 18px; height: 1px; background: var(--gold); opacity: 0.6; }
 
-/* ── GRID ─────────────────────────────────── */
-.grid-4 { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1rem; }
-.grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1rem; }
-.grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1rem; }
+/* GRIDS */
+.grid { display: grid; gap: 1rem; }
+.grid-4 { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+.grid-2 { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.grid-3 { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
 
-/* ── CARD ─────────────────────────────────── */
+/* CARD */
 .card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 1.4rem 1.5rem 1.3rem;
-  position: relative;
-  overflow: hidden;
-  transition: border-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-  cursor: default;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; padding: 1.4rem 1.5rem 2rem;
+  position: relative; overflow: hidden;
+  transition: border-color 0.3s, transform 0.2s, box-shadow 0.3s;
+  animation: fadeUp 0.4s ease both;
 }
-.card:hover {
-  border-color: rgba(201,169,110,0.4);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(201,169,110,0.06);
-}
+.card:nth-child(1){animation-delay:.04s}.card:nth-child(2){animation-delay:.08s}
+.card:nth-child(3){animation-delay:.12s}.card:nth-child(4){animation-delay:.16s}
+.card:hover { border-color: rgba(201,169,110,0.4); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
 .card::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
   background: linear-gradient(90deg, transparent, rgba(201,169,110,0.3), transparent);
-  opacity: 0;
-  transition: opacity 0.3s;
+  opacity: 0; transition: opacity 0.3s;
 }
 .card:hover::after { opacity: 1; }
+.card-bar { position: absolute; left: 0; top: 20%; bottom: 20%; width: 2px; border-radius: 2px; background: linear-gradient(to bottom, var(--gold), transparent); opacity: 0.5; }
 
-/* left accent bar */
-.card-bar {
-  position: absolute;
-  left: 0; top: 20%; bottom: 20%;
-  width: 2px;
-  border-radius: 2px;
-  background: linear-gradient(to bottom, var(--gold), transparent);
-  opacity: 0.5;
-}
+.card-category { font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim); margin-bottom: 0.3rem; }
+.card-name { font-family: 'Playfair Display', serif; font-size: 0.92rem; color: var(--soft); margin-bottom: 1.1rem; }
 
-.card-category {
-  font-size: 0.55rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--dim);
-  margin-bottom: 0.3rem;
-}
-.card-name {
-  font-family: 'Playfair Display', serif;
-  font-size: 0.92rem;
-  color: var(--soft);
-  margin-bottom: 1.1rem;
-  font-weight: 400;
-}
-
-.card-price {
-  font-size: 1.75rem;
-  font-weight: 500;
-  color: #e8ecf4;
-  letter-spacing: -0.03em;
-  line-height: 1;
-  min-height: 2rem;
-  display: flex;
-  align-items: baseline;
-  gap: 5px;
-  flex-wrap: wrap;
-}
-.card-price .unit {
-  font-size: 0.65rem;
-  color: var(--dim);
-  font-weight: 300;
-  letter-spacing: 0.05em;
-}
+.card-price { font-size: 1.75rem; font-weight: 500; color: #e8ecf4; letter-spacing: -0.03em; line-height: 1; min-height: 2rem; }
+.card-price .unit { font-size: 0.62rem; color: var(--dim); font-weight: 300; margin-left: 4px; }
 
 .card-change {
-  margin-top: 0.7rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 0.72rem;
-  font-weight: 500;
-  padding: 3px 9px;
-  border-radius: 20px;
-  min-height: 22px;
+  position: absolute; bottom: 0.85rem; left: 1.5rem;
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 0.7rem; font-weight: 500; padding: 3px 9px; border-radius: 20px; min-height: 22px;
 }
 .card-change.up   { color: var(--up);   background: var(--up-bg); }
 .card-change.down { color: var(--down); background: var(--down-bg); }
-.card-change.neutral { color: var(--dim); background: var(--muted); }
+.card-time { position: absolute; bottom: 0.85rem; right: 1rem; font-size: 0.52rem; color: var(--muted); font-style: italic; }
 
-.card-time {
-  position: absolute;
-  bottom: 0.8rem; right: 1rem;
-  font-size: 0.55rem;
-  color: var(--muted);
-  font-style: italic;
-}
-
-/* ── SKELETON ─────────────────────────────── */
+/* SKELETON */
 .skel {
   display: inline-block;
   background: linear-gradient(90deg, var(--border) 25%, var(--muted) 50%, var(--border) 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.8s infinite;
-  border-radius: 4px;
-  height: 1.75rem;
-  width: 8ch;
-  vertical-align: middle;
+  background-size: 200% 100%; animation: shimmer 1.8s infinite;
+  border-radius: 4px; height: 1.75rem; width: 8ch;
 }
-.skel-sm { height: 0.7rem; width: 5ch; }
 @keyframes shimmer { to { background-position: -200% 0; } }
+.card-error { font-size: 0.6rem; color: var(--dim); font-style: italic; }
 
-/* ── FOOTER ───────────────────────────────── */
+/* FOOTER */
 .footer {
-  max-width: 1100px;
-  margin: 2rem auto 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 0.8rem;
-  padding-top: 1.2rem;
-  border-top: 1px solid var(--border);
+  max-width: 1100px; margin: 2rem auto 0;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 0.8rem;
+  padding-top: 1.2rem; border-top: 1px solid var(--border);
 }
-.footer-left {
-  font-size: 0.58rem;
-  color: var(--dim);
-  letter-spacing: 0.08em;
-}
-.footer-right {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-#status {
-  font-size: 0.58rem;
-  color: var(--dim);
-}
+.footer-left { font-size: 0.58rem; color: var(--dim); }
+.footer-right { display: flex; align-items: center; gap: 1rem; }
+#status { font-size: 0.58rem; color: var(--dim); }
+
 .refresh-btn {
-  background: none;
-  border: 1px solid var(--border);
-  color: var(--soft);
-  font-family: 'DM Mono', monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.1em;
-  padding: 5px 14px;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: all 0.2s;
+  background: none; border: 1px solid var(--border); color: var(--soft);
+  font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em;
+  padding: 5px 14px; border-radius: 20px; cursor: pointer; transition: all 0.2s;
+  display: inline-flex; align-items: center; gap: 5px;
 }
 .refresh-btn:hover { border-color: var(--gold); color: var(--gold); }
-.refresh-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.refresh-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.spin { display: inline-block; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-/* ── FLASH ANIMATIONS ─────────────────────── */
+/* FLASH */
 @keyframes flash-up   { 0%,100%{color:#e8ecf4} 40%{color:var(--up)} }
 @keyframes flash-down { 0%,100%{color:#e8ecf4} 40%{color:var(--down)} }
 .flash-up   { animation: flash-up   1.2s ease; }
 .flash-down { animation: flash-down 1.2s ease; }
 
-/* ── FADE IN ──────────────────────────────── */
-@keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:none; } }
-.card { animation: fadeUp 0.5s ease both; }
-.card:nth-child(1){animation-delay:.05s} .card:nth-child(2){animation-delay:.10s}
-.card:nth-child(3){animation-delay:.15s} .card:nth-child(4){animation-delay:.20s}
+@keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
 
-/* ── RESPONSIVE ───────────────────────────── */
-@media(max-width:600px){
+@media(max-width:600px) {
   body { padding: 2rem 1rem 3rem; }
   .header h1 { font-size: 1.8rem; }
   .card-price { font-size: 1.45rem; }
@@ -279,134 +144,165 @@ body {
 <!-- INDIAN MARKETS -->
 <div class="section">
   <div class="section-title"><span></span>Indian Markets<span></span></div>
-  <div class="grid-4" id="grid-india">
-    <div class="card" id="card-nsei">  <div class="card-bar"></div><div class="card-category">Index</div><div class="card-name">Nifty 50</div>       <div class="card-price" id="p-nsei"><span class="skel"></span></div><div id="c-nsei"></div><div class="card-time" id="t-nsei"></div></div>
-    <div class="card" id="card-bsesn"><div class="card-bar"></div><div class="card-category">Index</div><div class="card-name">Sensex</div>         <div class="card-price" id="p-bsesn"><span class="skel"></span></div><div id="c-bsesn"></div><div class="card-time" id="t-bsesn"></div></div>
-    <div class="card" id="card-inr">  <div class="card-bar"></div><div class="card-category">Currency</div><div class="card-name">USD / INR</div>   <div class="card-price" id="p-inr"><span class="skel"></span></div><div id="c-inr"></div><div class="card-time" id="t-inr"></div></div>
-    <div class="card" id="card-gsec"> <div class="card-bar"></div><div class="card-category">Rate</div><div class="card-name">India 10Y G-Sec</div> <div class="card-price" id="p-gsec"><span class="skel"></span></div><div id="c-gsec"></div><div class="card-time" id="t-gsec"></div></div>
+  <div class="grid grid-4">
+    <div class="card"><div class="card-bar"></div><div class="card-category">Index</div>   <div class="card-name">Nifty 50</div>        <div class="card-price" id="price-NSEI"><span class="skel"></span></div>  <div id="chg-NSEI"   class="card-change"></div><div class="card-time" id="time-NSEI"></div></div>
+    <div class="card"><div class="card-bar"></div><div class="card-category">Index</div>   <div class="card-name">Sensex</div>          <div class="card-price" id="price-BSESN"><span class="skel"></span></div> <div id="chg-BSESN"  class="card-change"></div><div class="card-time" id="time-BSESN"></div></div>
+    <div class="card"><div class="card-bar"></div><div class="card-category">Currency</div><div class="card-name">USD / INR</div>       <div class="card-price" id="price-INR"><span class="skel"></span></div>   <div id="chg-INR"    class="card-change"></div><div class="card-time" id="time-INR"></div></div>
+    <div class="card"><div class="card-bar"></div><div class="card-category">Rate</div>    <div class="card-name">India 10Y G-Sec</div> <div class="card-price" id="price-GSEC"><span class="skel"></span></div>  <div id="chg-GSEC"   class="card-change"></div><div class="card-time" id="time-GSEC"></div></div>
   </div>
 </div>
 
 <!-- GLOBAL MARKETS -->
 <div class="section">
   <div class="section-title"><span></span>Global Markets<span></span></div>
-  <div class="grid-2" id="grid-global">
-    <div class="card" id="card-sp">  <div class="card-bar"></div><div class="card-category">Index</div><div class="card-name">S&amp;P 500</div><div class="card-price" id="p-sp"><span class="skel"></span></div><div id="c-sp"></div><div class="card-time" id="t-sp"></div></div>
-    <div class="card" id="card-nsdq"><div class="card-bar"></div><div class="card-category">Index</div><div class="card-name">Nasdaq</div>  <div class="card-price" id="p-nsdq"><span class="skel"></span></div><div id="c-nsdq"></div><div class="card-time" id="t-nsdq"></div></div>
+  <div class="grid grid-2">
+    <div class="card"><div class="card-bar"></div><div class="card-category">Index</div><div class="card-name">S&amp;P 500</div><div class="card-price" id="price-GSPC"><span class="skel"></span></div><div id="chg-GSPC" class="card-change"></div><div class="card-time" id="time-GSPC"></div></div>
+    <div class="card"><div class="card-bar"></div><div class="card-category">Index</div><div class="card-name">Nasdaq</div>   <div class="card-price" id="price-IXIC"><span class="skel"></span></div><div id="chg-IXIC" class="card-change"></div><div class="card-time" id="time-IXIC"></div></div>
   </div>
 </div>
 
 <!-- COMMODITIES -->
 <div class="section">
   <div class="section-title"><span></span>Commodities<span></span></div>
-  <div class="grid-3" id="grid-comm">
-    <div class="card" id="card-gold">  <div class="card-bar"></div><div class="card-category">Commodity</div><div class="card-name">Gold</div>             <div class="card-price" id="p-gold"><span class="skel"></span></div><div id="c-gold"></div><div class="card-time" id="t-gold"></div></div>
-    <div class="card" id="card-silver"><div class="card-bar"></div><div class="card-category">Commodity</div><div class="card-name">Silver</div>           <div class="card-price" id="p-silver"><span class="skel"></span></div><div id="c-silver"></div><div class="card-time" id="t-silver"></div></div>
-    <div class="card" id="card-crude"> <div class="card-bar"></div><div class="card-category">Commodity</div><div class="card-name">Crude Oil (WTI)</div> <div class="card-price" id="p-crude"><span class="skel"></span></div><div id="c-crude"></div><div class="card-time" id="t-crude"></div></div>
+  <div class="grid grid-3">
+    <div class="card"><div class="card-bar"></div><div class="card-category">Commodity</div><div class="card-name">Gold</div>            <div class="card-price" id="price-GOLD"><span class="skel"></span></div>  <div id="chg-GOLD"   class="card-change"></div><div class="card-time" id="time-GOLD"></div></div>
+    <div class="card"><div class="card-bar"></div><div class="card-category">Commodity</div><div class="card-name">Silver</div>          <div class="card-price" id="price-SILVER"><span class="skel"></span></div><div id="chg-SILVER" class="card-change"></div><div class="card-time" id="time-SILVER"></div></div>
+    <div class="card"><div class="card-bar"></div><div class="card-category">Commodity</div><div class="card-name">Crude Oil (WTI)</div> <div class="card-price" id="price-CRUDE"><span class="skel"></span></div> <div id="chg-CRUDE"  class="card-change"></div><div class="card-time" id="time-CRUDE"></div></div>
   </div>
 </div>
 
 <div class="footer">
-  <div class="footer-left">Data via Yahoo Finance &nbsp;·&nbsp; Prices delayed ~15 min</div>
+  <div class="footer-left">Data via Yahoo Finance &nbsp;·&nbsp; Prices may be delayed ~15 min</div>
   <div class="footer-right">
     <span id="status">Fetching…</span>
-    <button class="refresh-btn" id="refreshBtn" onclick="fetchAll()">↻ Refresh</button>
+    <button class="refresh-btn" id="refreshBtn" onclick="fetchAll()">
+      <span id="refreshIcon">↻</span> Refresh
+    </button>
   </div>
 </div>
 
 <script>
-// ── Ticker config ────────────────────────────────────────────────────────────
-const TICKERS = [
-  // id        symbol           priceId    changeId  timeId   dp  unit
-  ['nsei',   '^NSEI',          'p-nsei',  'c-nsei',  't-nsei',  0, ''],
-  ['bsesn',  '^BSESN',         'p-bsesn', 'c-bsesn', 't-bsesn', 0, ''],
-  ['inr',    'INR=X',          'p-inr',   'c-inr',   't-inr',   2, 'USD/INR'],
-  ['gsec',   '^IN10YT=RR',     'p-gsec',  'c-gsec',  't-gsec',  3, '% yield'],
-  ['sp',     '^GSPC',          'p-sp',    'c-sp',    't-sp',    2, ''],
-  ['nsdq',   '^IXIC',          'p-nsdq',  'c-nsdq',  't-nsdq',  2, ''],
-  ['gold',   'GC=F',           'p-gold',  'c-gold',  't-gold',  2, 'USD/oz'],
-  ['silver', 'SI=F',           'p-silver','c-silver', 't-silver',3, 'USD/oz'],
-  ['crude',  'CL=F',           'p-crude', 'c-crude',  't-crude', 2, 'USD/bbl'],
-];
+// ── Config ───────────────────────────────────────────────────────────────────
+const TICKERS = {
+  NSEI:   { symbol: '^NSEI',        dp: 0, unit: '' },
+  BSESN:  { symbol: '^BSESN',       dp: 0, unit: '' },
+  INR:    { symbol: 'INR=X',        dp: 2, unit: 'USD/INR' },
+  GSEC:   { symbol: '^IN10YT=RR',   dp: 3, unit: '% yield' },
+  GSPC:   { symbol: '^GSPC',        dp: 2, unit: '' },
+  IXIC:   { symbol: '^IXIC',        dp: 2, unit: '' },
+  GOLD:   { symbol: 'GC=F',         dp: 2, unit: 'USD/oz' },
+  SILVER: { symbol: 'SI=F',         dp: 3, unit: 'USD/oz' },
+  CRUDE:  { symbol: 'CL=F',         dp: 2, unit: 'USD/bbl' },
+};
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
-function fmtNum(n, dp) {
-  if (n >= 1000) return n.toLocaleString('en-IN', {minimumFractionDigits: dp, maximumFractionDigits: dp});
-  return n.toFixed(dp);
+const fmtNum = (n, dp) =>
+  n.toLocaleString('en-IN', { minimumFractionDigits: dp, maximumFractionDigits: dp });
+
+const arrow = up => up
+  ? `<svg width="9" height="9" viewBox="0 0 10 10" fill="none"><polyline points="2,7 5,2 8,7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+  : `<svg width="9" height="9" viewBox="0 0 10 10" fill="none"><polyline points="2,3 5,8 8,3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+// ── Fetch one ticker — direct Yahoo Finance with corsDomain ──────────────────
+async function fetchOne(id) {
+  const { symbol, dp, unit } = TICKERS[id];
+
+  // Primary: query1
+  // Fallback: query2 (Yahoo load-balances between the two)
+  const base = Math.random() > 0.5 ? 'query1' : 'query2';
+  const url  = `https://${base}.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}`
+             + `?interval=1d&range=2d&corsDomain=finance.yahoo.com`;
+
+  const controller = new AbortController();
+  const timeout    = setTimeout(() => controller.abort(), 8000); // 8s timeout
+
+  try {
+    const res = await fetch(url, {
+      headers: { 'Accept': 'application/json' },
+      cache:   'no-store',
+      signal:  controller.signal,
+    });
+    clearTimeout(timeout);
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    const meta  = data.chart.result[0].meta;
+    const price = meta.regularMarketPrice;
+    const prev  = meta.chartPreviousClose ?? meta.regularMarketPreviousClose ?? meta.previousClose;
+
+    if (price == null || prev == null) throw new Error('missing price');
+
+    const chg  = price - prev;
+    const pct  = (chg / prev) * 100;
+    const ts   = new Date(meta.regularMarketTime * 1000);
+    const tStr = ts.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' });
+
+    return { id, price, chg, pct, tStr, dp, unit };
+  } catch(e) {
+    clearTimeout(timeout);
+    throw e;
+  }
 }
 
-function arrowSVG(up) {
-  return up
-    ? `<svg width="9" height="9" viewBox="0 0 10 10" fill="none"><polyline points="2,7 5,2 8,7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
-    : `<svg width="9" height="9" viewBox="0 0 10 10" fill="none"><polyline points="2,3 5,8 8,3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-}
+// ── Update a single card ─────────────────────────────────────────────────────
+function updateCard({ id, price, chg, pct, tStr, dp, unit }) {
+  const pEl = document.getElementById(`price-${id}`);
+  const cEl = document.getElementById(`chg-${id}`);
+  const tEl = document.getElementById(`time-${id}`);
+  if (!pEl) return;
 
-function changeHTML(chg, pct) {
-  const up  = chg >= 0;
-  const cls = up ? 'up' : 'down';
-  const sgn = up ? '+' : '';
-  return `<span class="card-change ${cls}">${arrowSVG(up)} ${sgn}${chg.toFixed(2)} (${sgn}${pct.toFixed(2)}%)</span>`;
-}
-
-// ── Fetch one ticker via allorigins CORS proxy → Yahoo Finance v8 ────────────
-async function fetchTicker([id, symbol, pId, cId, tId, dp, unit]) {
-  const yUrl  = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1d&range=2d`;
-  const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(yUrl)}`;
-
-  const res  = await fetch(proxy, {cache: 'no-store'});
-  const wrap = await res.json();
-  const data = JSON.parse(wrap.contents);
-
-  const result = data.chart.result[0];
-  const meta   = result.meta;
-
-  // price
-  const price = meta.regularMarketPrice;
-  // previous close — try multiple fields
-  const prev  = meta.chartPreviousClose ?? meta.previousClose ?? meta.regularMarketPreviousClose;
-  const chg   = price - prev;
-  const pct   = (chg / prev) * 100;
-
-  // timestamp
-  const ts  = new Date(meta.regularMarketTime * 1000);
-  const tStr = ts.toLocaleTimeString('en-IN', {hour: '2-digit', minute: '2-digit', timeZoneName: 'short'});
-
-  // update DOM
-  const pEl = document.getElementById(pId);
-  const cEl = document.getElementById(cId);
-  const tEl = document.getElementById(tId);
-
-  // flash
-  pEl.classList.remove('flash-up','flash-down');
-  void pEl.offsetWidth;
+  // flash colour hint
+  pEl.classList.remove('flash-up', 'flash-down');
+  void pEl.offsetWidth; // force reflow to restart animation
   pEl.classList.add(chg >= 0 ? 'flash-up' : 'flash-down');
 
   pEl.innerHTML = fmtNum(price, dp) + (unit ? `<span class="unit">${unit}</span>` : '');
-  cEl.innerHTML = changeHTML(chg, pct);
-  tEl.textContent = tStr;
+
+  const up  = chg >= 0;
+  const sgn = up ? '+' : '';
+  cEl.className = `card-change ${up ? 'up' : 'down'}`;
+  cEl.innerHTML = `${arrow(up)} ${sgn}${chg.toFixed(2)} (${sgn}${pct.toFixed(2)}%)`;
+
+  if (tEl) tEl.textContent = tStr;
 }
 
-// ── Fetch all ────────────────────────────────────────────────────────────────
+function markError(id) {
+  const pEl = document.getElementById(`price-${id}`);
+  const cEl = document.getElementById(`chg-${id}`);
+  if (pEl) pEl.innerHTML = `<span class="card-error">unavailable</span>`;
+  if (cEl) cEl.innerHTML = '';
+}
+
+// ── Fetch everything in parallel ─────────────────────────────────────────────
 async function fetchAll() {
-  const btn = document.getElementById('refreshBtn');
-  btn.disabled = true;
-  document.getElementById('status').textContent = 'Updating…';
+  const btn     = document.getElementById('refreshBtn');
+  const iconEl  = document.getElementById('refreshIcon');
+  const statusEl= document.getElementById('status');
 
-  const results = await Promise.allSettled(TICKERS.map(fetchTicker));
+  btn.disabled    = true;
+  iconEl.className = 'spin';
+  statusEl.textContent = 'Updating…';
 
-  // report any failures quietly in console
+  const ids     = Object.keys(TICKERS);
+  const results = await Promise.allSettled(ids.map(fetchOne));
+
+  let ok = 0;
   results.forEach((r, i) => {
-    if (r.status === 'rejected') console.warn(`Failed: ${TICKERS[i][1]}`, r.reason);
+    if (r.status === 'fulfilled') { updateCard(r.value); ok++; }
+    else { console.warn(`[${ids[i]}]`, r.reason?.message); markError(ids[i]); }
   });
 
-  const now = new Date().toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit'});
-  document.getElementById('status').textContent = `Last updated ${now}`;
+  const now = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+  statusEl.textContent = `Updated ${now} · ${ok}/${ids.length} live`;
+
+  iconEl.className = '';
   btn.disabled = false;
 }
 
-// ── Init + auto-refresh every 5 min ─────────────────────────────────────────
+// ── Boot ─────────────────────────────────────────────────────────────────────
 fetchAll();
-setInterval(fetchAll, 5 * 60 * 1000);
+setInterval(fetchAll, 3 * 60 * 1000); // auto-refresh every 3 min
 </script>
 
 </body>
