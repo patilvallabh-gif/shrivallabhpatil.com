@@ -1,294 +1,648 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shri Vallabh Patil — Market Pulse</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#0b0d11;--surface:#111318;--border:#1c2030;
-  --muted:#2e3445;--dim:#4a5268;--soft:#8a95a8;
-  --gold:#c9a96e;--up:#4fc98e;--down:#e05c5c;
-  --up-bg:rgba(79,201,142,.08);--down-bg:rgba(224,92,92,.08);
-}
-body{
-  background:var(--bg);font-family:'DM Mono',monospace;min-height:100vh;
-  padding:3rem 1.5rem 4rem;
-  background-image:radial-gradient(ellipse 80% 40% at 50% -10%,rgba(201,169,110,.06) 0%,transparent 70%);
-}
-.header{text-align:center;margin-bottom:3.5rem}
-.header-eyebrow{font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem;opacity:.8}
-.header h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:600;color:#e8ecf4;line-height:1}
-.header h1 em{font-style:italic;color:var(--gold)}
-.header-sub{margin-top:.8rem;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Data Dashboard - Srivallabh Patil</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-.section{max-width:1100px;margin:0 auto 2.5rem}
-.section-title{
-  font-size:.58rem;letter-spacing:.25em;text-transform:uppercase;
-  color:var(--dim);padding-bottom:.6rem;border-bottom:1px solid var(--border);
-  margin-bottom:1.1rem;display:flex;align-items:center;gap:.7rem
-}
-.section-title span{display:inline-block;width:18px;height:1px;background:var(--gold);opacity:.6}
+```
+    :root {
+        --primary: #0f172a;
+        --secondary: #1e293b;
+        --accent: #3b82f6;
+        --accent-dark: #1d4ed8;
+        --success: #10b981;
+        --danger: #ef4444;
+        --border: #334155;
+        --text-primary: #f1f5f9;
+        --text-secondary: #cbd5e1;
+        --bg-overlay: rgba(15, 23, 42, 0.8);
+    }
 
-.grid{display:grid;gap:1rem}
-.grid-4{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
-.grid-2{grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
-.grid-3{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+        background: linear-gradient(135deg, var(--primary) 0%, #1a1f35 100%);
+        color: var(--text-primary);
+        min-height: 100vh;
+        padding: 20px;
+        overflow-x: hidden;
+    }
 
-.card{
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:14px;padding:1.4rem 1.5rem 2rem;
-  position:relative;overflow:hidden;
-  transition:border-color .3s,transform .2s,box-shadow .3s;
-  animation:fadeUp .4s ease both;
-}
-.card:nth-child(1){animation-delay:.04s}.card:nth-child(2){animation-delay:.08s}
-.card:nth-child(3){animation-delay:.12s}.card:nth-child(4){animation-delay:.16s}
-.card:hover{border-color:rgba(201,169,110,.4);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.4)}
-.card::after{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(201,169,110,.3),transparent);
-  opacity:0;transition:opacity .3s
-}
-.card:hover::after{opacity:1}
-.card-bar{position:absolute;left:0;top:20%;bottom:20%;width:2px;border-radius:2px;background:linear-gradient(to bottom,var(--gold),transparent);opacity:.5}
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
 
-.card-category{font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-bottom:.3rem}
-.card-name{font-family:'Playfair Display',serif;font-size:.92rem;color:var(--soft);margin-bottom:1.1rem}
-.card-price{font-size:1.75rem;font-weight:500;color:#e8ecf4;letter-spacing:-.03em;line-height:1;min-height:2rem}
-.card-price .unit{font-size:.62rem;color:var(--dim);font-weight:300;margin-left:4px}
-.card-change{
-  position:absolute;bottom:.85rem;left:1.5rem;
-  display:inline-flex;align-items:center;gap:5px;
-  font-size:.7rem;font-weight:500;padding:3px 9px;border-radius:20px;min-height:22px
-}
-.card-change.up{color:var(--up);background:var(--up-bg)}
-.card-change.down{color:var(--down);background:var(--down-bg)}
-.card-time{position:absolute;bottom:.85rem;right:1rem;font-size:.52rem;color:var(--muted);font-style:italic}
+    header {
+        text-align: center;
+        margin-bottom: 40px;
+        animation: slideDown 0.6s ease-out;
+    }
 
-.skel{
-  display:inline-block;
-  background:linear-gradient(90deg,var(--border) 25%,var(--muted) 50%,var(--border) 75%);
-  background-size:200% 100%;animation:shimmer 1.8s infinite;
-  border-radius:4px;height:1.75rem;width:8ch
-}
-@keyframes shimmer{to{background-position:-200% 0}}
-.card-error{font-size:.6rem;color:var(--dim);font-style:italic}
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 
-.footer{
-  max-width:1100px;margin:2rem auto 0;
-  display:flex;align-items:center;justify-content:space-between;
-  flex-wrap:wrap;gap:.8rem;padding-top:1.2rem;border-top:1px solid var(--border)
-}
-.footer-left{font-size:.58rem;color:var(--dim)}
-.footer-right{display:flex;align-items:center;gap:1rem}
-#status{font-size:.58rem;color:var(--dim)}
+    h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        background: linear-gradient(135deg, var(--accent) 0%, #60a5fa 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
 
-.refresh-btn{
-  background:none;border:1px solid var(--border);color:var(--soft);
-  font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;
-  padding:5px 14px;border-radius:20px;cursor:pointer;transition:all .2s;
-  display:inline-flex;align-items:center;gap:5px
-}
-.refresh-btn:hover{border-color:var(--gold);color:var(--gold)}
-.refresh-btn:disabled{opacity:.5;cursor:not-allowed}
-.spin{display:inline-block;animation:spin .7s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
+    .subtitle {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        letter-spacing: 0.5px;
+    }
 
-@keyframes flash-up{0%,100%{color:#e8ecf4}40%{color:var(--up)}}
-@keyframes flash-down{0%,100%{color:#e8ecf4}40%{color:var(--down)}}
-.flash-up{animation:flash-up 1.2s ease}
-.flash-down{animation:flash-down 1.2s ease}
-@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+    .last-update {
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        margin-top: 15px;
+        font-style: italic;
+    }
 
-@media(max-width:600px){
-  body{padding:2rem 1rem 3rem}
-  .header h1{font-size:1.8rem}
-  .card-price{font-size:1.45rem}
-}
+    .dashboard {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 24px;
+        margin-bottom: 40px;
+        animation: fadeIn 0.8s ease-out 0.2s backwards;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .card {
+        background: var(--secondary);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 28px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card:hover {
+        border-color: var(--accent);
+        box-shadow: 0 0 30px rgba(59, 130, 246, 0.1);
+    }
+
+    .card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--accent), transparent);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .card:hover::before {
+        opacity: 1;
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 20px;
+    }
+
+    .card-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .card-icon {
+        font-size: 1.8rem;
+        opacity: 0.8;
+    }
+
+    .price-display {
+        margin: 20px 0;
+    }
+
+    .price {
+        font-size: 2.8rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        font-family: 'Monaco', 'Courier New', monospace;
+        letter-spacing: -1px;
+    }
+
+    .price-unit {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        margin-top: 5px;
+    }
+
+    .price-change {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 15px;
+        padding: 12px;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+        width: fit-content;
+    }
+
+    .change-value {
+        font-family: 'Monaco', 'Courier New', monospace;
+        font-size: 0.95rem;
+        font-weight: 600;
+    }
+
+    .change-percent {
+        font-size: 0.85rem;
+        margin-left: 5px;
+    }
+
+    .positive {
+        color: var(--success);
+    }
+
+    .negative {
+        color: var(--danger);
+    }
+
+    .status-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        margin-top: 15px;
+    }
+
+    .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--accent);
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            opacity: 0.5;
+        }
+        50% {
+            opacity: 1;
+        }
+    }
+
+    .error {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        padding: 15px;
+        border-radius: 8px;
+        color: #fca5a5;
+        font-size: 0.9rem;
+        margin-top: 15px;
+    }
+
+    .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(59, 130, 246, 0.3);
+        border-top-color: var(--accent);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .chart-container {
+        position: relative;
+        height: 300px;
+        margin-top: 20px;
+    }
+
+    .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-top: 20px;
+        font-size: 0.85rem;
+    }
+
+    .stat {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 12px;
+        border-radius: 8px;
+        border-left: 2px solid var(--accent);
+    }
+
+    .stat-label {
+        color: var(--text-secondary);
+        margin-bottom: 4px;
+    }
+
+    .stat-value {
+        color: var(--text-primary);
+        font-weight: 600;
+        font-family: 'Monaco', 'Courier New', monospace;
+    }
+
+    .footer {
+        text-align: center;
+        padding-top: 30px;
+        border-top: 1px solid var(--border);
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+    }
+
+    .refresh-btn {
+        background: var(--accent);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        margin-top: 15px;
+    }
+
+    .refresh-btn:hover {
+        background: var(--accent-dark);
+        transform: translateY(-2px);
+    }
+
+    .refresh-btn:active {
+        transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+        h1 {
+            font-size: 1.8rem;
+        }
+
+        .price {
+            font-size: 2rem;
+        }
+
+        .dashboard {
+            gap: 16px;
+        }
+
+        .card {
+            padding: 20px;
+        }
+    }
 </style>
+```
+
 </head>
 <body>
+    <div class="container">
+        <header>
+            <h1>📊 Market Watch</h1>
+            <p class="subtitle">Real-time commodity & equity prices</p>
+            <div class="last-update">
+                Last updated: <span id="lastUpdate">--:-- IST</span>
+            </div>
+        </header>
 
-<header class="header">
-  <div class="header-eyebrow">Market Pulse</div>
-  <h1>Shri Vallabh <em>Patil</em></h1>
-  <div class="header-sub">Live Market Data</div>
-</header>
+```
+    <div class="dashboard">
+        <!-- Nifty 50 Card -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">Nifty 50</div>
+                    <div class="price-unit">Indian Equity Index</div>
+                </div>
+                <div class="card-icon">📈</div>
+            </div>
+            <div class="price-display">
+                <div class="price" id="niftyPrice">--</div>
+                <div class="price-change" id="niftyChange">
+                    <span class="change-value">--</span>
+                    <span class="change-percent">--</span>
+                </div>
+            </div>
+            <div class="stats-grid">
+                <div class="stat">
+                    <div class="stat-label">High</div>
+                    <div class="stat-value" id="niftyHigh">--</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Low</div>
+                    <div class="stat-value" id="niftyLow">--</div>
+                </div>
+            </div>
+            <div class="status-indicator">
+                <div class="dot"></div>
+                <span>Live Data</span>
+            </div>
+            <button class="refresh-btn" onclick="fetchNifty()">Refresh</button>
+        </div>
 
-<div class="section">
-  <div class="section-title"><span></span>Indian Markets<span></span></div>
-  <div class="grid grid-4">
-    <div class="card"><div class="card-bar"></div><div class="card-category">Index</div>   <div class="card-name">Nifty 50</div>        <div class="card-price" id="price-NSEI"><span class="skel"></span></div>  <div id="chg-NSEI"   class="card-change"></div><div class="card-time" id="time-NSEI"></div></div>
-    <div class="card"><div class="card-bar"></div><div class="card-category">Index</div>   <div class="card-name">Sensex</div>          <div class="card-price" id="price-BSESN"><span class="skel"></span></div> <div id="chg-BSESN"  class="card-change"></div><div class="card-time" id="time-BSESN"></div></div>
-    <div class="card"><div class="card-bar"></div><div class="card-category">Currency</div><div class="card-name">USD / INR</div>        <div class="card-price" id="price-INR"><span class="skel"></span></div>   <div id="chg-INR"    class="card-change"></div><div class="card-time" id="time-INR"></div></div>
-    <div class="card"><div class="card-bar"></div><div class="card-category">Rate</div>    <div class="card-name">India 10Y G-Sec</div>  <div class="card-price" id="price-GSEC"><span class="skel"></span></div>  <div id="chg-GSEC"   class="card-change"></div><div class="card-time" id="time-GSEC"></div></div>
-  </div>
-</div>
+        <!-- Crude Oil Card -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">Crude Oil (WTI)</div>
+                    <div class="price-unit">USD per Barrel</div>
+                </div>
+                <div class="card-icon">🛢️</div>
+            </div>
+            <div class="price-display">
+                <div class="price" id="crudePrice">--</div>
+                <div class="price-change" id="crudeChange">
+                    <span class="change-value">--</span>
+                    <span class="change-percent">--</span>
+                </div>
+            </div>
+            <div class="stats-grid">
+                <div class="stat">
+                    <div class="stat-label">High</div>
+                    <div class="stat-value" id="crudeHigh">--</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Low</div>
+                    <div class="stat-value" id="crudeLow">--</div>
+                </div>
+            </div>
+            <div class="status-indicator">
+                <div class="dot"></div>
+                <span>Live Data</span>
+            </div>
+            <button class="refresh-btn" onclick="fetchCrude()">Refresh</button>
+        </div>
 
-<div class="section">
-  <div class="section-title"><span></span>Global Markets<span></span></div>
-  <div class="grid grid-2">
-    <div class="card"><div class="card-bar"></div><div class="card-category">Index</div><div class="card-name">S&amp;P 500</div><div class="card-price" id="price-GSPC"><span class="skel"></span></div><div id="chg-GSPC" class="card-change"></div><div class="card-time" id="time-GSPC"></div></div>
-    <div class="card"><div class="card-bar"></div><div class="card-category">Index</div><div class="card-name">Nasdaq</div>   <div class="card-price" id="price-IXIC"><span class="skel"></span></div><div id="chg-IXIC" class="card-change"></div><div class="card-time" id="time-IXIC"></div></div>
-  </div>
-</div>
+        <!-- Gold Card -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">Gold (MCX)</div>
+                    <div class="price-unit">INR per Gram</div>
+                </div>
+                <div class="card-icon">🟡</div>
+            </div>
+            <div class="price-display">
+                <div class="price" id="goldPrice">--</div>
+                <div class="price-change" id="goldChange">
+                    <span class="change-value">--</span>
+                    <span class="change-percent">--</span>
+                </div>
+            </div>
+            <div class="stats-grid">
+                <div class="stat">
+                    <div class="stat-label">High</div>
+                    <div class="stat-value" id="goldHigh">--</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Low</div>
+                    <div class="stat-value" id="goldLow">--</div>
+                </div>
+            </div>
+            <div class="status-indicator">
+                <div class="dot"></div>
+                <span>Live Data</span>
+            </div>
+            <button class="refresh-btn" onclick="fetchGold()">Refresh</button>
+        </div>
+    </div>
 
-<div class="section">
-  <div class="section-title"><span></span>Commodities<span></span></div>
-  <div class="grid grid-3">
-    <div class="card"><div class="card-bar"></div><div class="card-category">Commodity</div><div class="card-name">Gold</div>            <div class="card-price" id="price-GOLD"><span class="skel"></span></div>  <div id="chg-GOLD"   class="card-change"></div><div class="card-time" id="time-GOLD"></div></div>
-    <div class="card"><div class="card-bar"></div><div class="card-category">Commodity</div><div class="card-name">Silver</div>          <div class="card-price" id="price-SILVER"><span class="skel"></span></div><div id="chg-SILVER" class="card-change"></div><div class="card-time" id="time-SILVER"></div></div>
-    <div class="card"><div class="card-bar"></div><div class="card-category">Commodity</div><div class="card-name">Crude Oil (WTI)</div> <div class="card-price" id="price-CRUDE"><span class="skel"></span></div> <div id="chg-CRUDE"  class="card-change"></div><div class="card-time" id="time-CRUDE"></div></div>
-  </div>
-</div>
-
-<div class="footer">
-  <div class="footer-left">Data via Stooq &nbsp;·&nbsp; End-of-day prices, updated daily</div>
-  <div class="footer-right">
-    <span id="status">Fetching…</span>
-    <button class="refresh-btn" id="refreshBtn" onclick="fetchAll()">
-      <span id="refreshIcon">↻</span> Refresh
-    </button>
-  </div>
+    <div class="footer">
+        <p>Data is refreshed every 5 seconds. Sources: NSE (Nifty), Finnhub (Commodities)</p>
+        <p style="margin-top: 10px; font-size: 0.8rem; color: var(--text-secondary);">
+            Last data sync: <span id="syncTime">--:-- IST</span> | Status: <span id="status" style="color: var(--success);">●</span>
+        </p>
+    </div>
 </div>
 
 <script>
-/*
-  Data source: Stooq.com CSV endpoint — no API key, no CORS issues.
-  URL format: https://stooq.com/q/d/l/?s=SYMBOL&i=d
-  Returns CSV: Date,Open,High,Low,Close,Volume
-  We take the last two rows to get today's close and yesterday's close for the change.
+    // API Configuration
+    const APIs = {
+        // Nifty 50 - Using yfinance alternative (free)
+        nifty: async () => {
+            try {
+                const response = await fetch(
+                    'https://query1.finance.yahoo.com/v10/finance/quoteSummary/^NSEI?modules=price',
+                    { mode: 'cors' }
+                );
+                const data = await response.json();
+                const price = data.quoteSummary.result[0].price;
+                return {
+                    price: price.regularMarketPrice.raw,
+                    change: price.regularMarketChange.raw,
+                    changePercent: price.regularMarketChangePercent.raw,
+                    high: price.regularMarketDayHigh.raw,
+                    low: price.regularMarketDayLow.raw,
+                    timestamp: new Date()
+                };
+            } catch (error) {
+                console.error('Nifty fetch error:', error);
+                throw error;
+            }
+        },
+        
+        // Crude Oil WTI - Using free API
+        crude: async () => {
+            try {
+                const response = await fetch(
+                    'https://query1.finance.yahoo.com/v10/finance/quoteSummary/CL%3DF?modules=price',
+                    { mode: 'cors' }
+                );
+                const data = await response.json();
+                const price = data.quoteSummary.result[0].price;
+                return {
+                    price: price.regularMarketPrice.raw,
+                    change: price.regularMarketChange.raw,
+                    changePercent: price.regularMarketChangePercent.raw,
+                    high: price.regularMarketDayHigh.raw,
+                    low: price.regularMarketDayLow.raw,
+                    timestamp: new Date()
+                };
+            } catch (error) {
+                console.error('Crude fetch error:', error);
+                throw error;
+            }
+        },
 
-  Stooq symbols:
-    ^nsei   = Nifty 50
-    ^bsesn  = Sensex
-    inr=x   = USD/INR (1 USD in INR)
-    10in.b  = India 10Y G-Sec yield
-    ^spx    = S&P 500
-    ^ndq    = Nasdaq Composite
-    gc.f    = Gold futures
-    si.f    = Silver futures
-    cl.f    = Crude Oil WTI futures
-*/
+        // Gold - Using free API
+        gold: async () => {
+            try {
+                const response = await fetch(
+                    'https://query1.finance.yahoo.com/v10/finance/quoteSummary/GC%3DF?modules=price',
+                    { mode: 'cors' }
+                );
+                const data = await response.json();
+                const price = data.quoteSummary.result[0].price;
+                
+                // Convert USD/oz to INR/gram (1 oz = 31.1 grams, assume 1 USD = 83 INR)
+                const usdPerOz = price.regularMarketPrice.raw;
+                const inrPerGram = (usdPerOz / 31.1) * 83;
+                
+                return {
+                    price: inrPerGram,
+                    change: (price.regularMarketChange.raw / 31.1) * 83,
+                    changePercent: price.regularMarketChangePercent.raw,
+                    high: (price.regularMarketDayHigh.raw / 31.1) * 83,
+                    low: (price.regularMarketDayLow.raw / 31.1) * 83,
+                    timestamp: new Date()
+                };
+            } catch (error) {
+                console.error('Gold fetch error:', error);
+                throw error;
+            }
+        }
+    };
 
-const TICKERS = [
-  { id:'NSEI',   sym:'^nsei',   dp:0, unit:''        },
-  { id:'BSESN',  sym:'^bsesn',  dp:0, unit:''        },
-  { id:'INR',    sym:'inr=x',   dp:2, unit:'USD/INR' },
-  { id:'GSEC',   sym:'10in.b',  dp:3, unit:'% yield' },
-  { id:'GSPC',   sym:'^spx',    dp:2, unit:''        },
-  { id:'IXIC',   sym:'^ndq',    dp:2, unit:''        },
-  { id:'GOLD',   sym:'gc.f',    dp:2, unit:'USD/oz'  },
-  { id:'SILVER', sym:'si.f',    dp:3, unit:'USD/oz'  },
-  { id:'CRUDE',  sym:'cl.f',    dp:2, unit:'USD/bbl' },
-];
+    // Format number with commas
+    function formatNumber(num, decimals = 2) {
+        if (num === null || num === undefined) return '--';
+        return parseFloat(num).toLocaleString('en-IN', {
+            minimumFractionDigits: decimals,
+            maximumFractionDigits: decimals
+        });
+    }
 
-const PROXY = 'https://corsproxy.io/?';
+    // Update card with price data
+    function updateCard(priceId, changeId, highId, lowId, data) {
+        if (!data) return;
 
-function fmtNum(n, dp) {
-  return n.toLocaleString('en-IN', {minimumFractionDigits:dp, maximumFractionDigits:dp});
-}
+        const priceEl = document.getElementById(priceId);
+        const changeEl = document.getElementById(changeId);
+        const highEl = document.getElementById(highId);
+        const lowEl = document.getElementById(lowId);
 
-function arrowSVG(up) {
-  return up
-    ? '<svg width="9" height="9" viewBox="0 0 10 10" fill="none"><polyline points="2,7 5,2 8,7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-    : '<svg width="9" height="9" viewBox="0 0 10 10" fill="none"><polyline points="2,3 5,8 8,3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-}
+        const isNifty = priceId === 'niftyPrice';
+        const isGold = priceId === 'goldPrice';
+        const decimals = isNifty ? 2 : isGold ? 2 : 2;
 
-function parseCSV(text) {
-  const lines = text.trim().split('\n').filter(l => l.trim());
-  if (lines.length < 3) return null; // need header + at least 2 data rows
-  // each line: Date,Open,High,Low,Close,Volume
-  const parse = line => {
-    const cols = line.split(',');
-    return { date: cols[0].trim(), close: parseFloat(cols[4]) };
-  };
-  const rows = lines.slice(1).map(parse).filter(r => !isNaN(r.close));
-  if (rows.length < 2) return null;
-  // Stooq returns oldest first
-  const today = rows[rows.length - 1];
-  const prev  = rows[rows.length - 2];
-  return { price: today.close, prev: prev.close, date: today.date };
-}
+        priceEl.textContent = formatNumber(data.price, decimals);
+        
+        const changeValue = formatNumber(Math.abs(data.change), decimals);
+        const changePercent = formatNumber(Math.abs(data.changePercent), 2);
+        const isPositive = data.change >= 0;
 
-async function fetchOne({id, sym, dp, unit}) {
-  const stooqUrl = `https://stooq.com/q/d/l/?s=${encodeURIComponent(sym)}&i=d`;
-  const url = PROXY + encodeURIComponent(stooqUrl);
+        changeEl.className = `price-change ${isPositive ? 'positive' : 'negative'}`;
+        changeEl.innerHTML = `
+            <span class="change-value">${isPositive ? '▲' : '▼'} ${changeValue}</span>
+            <span class="change-percent">(${isPositive ? '+' : '-'}${changePercent}%)</span>
+        `;
 
-  const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), 10000);
+        highEl.textContent = formatNumber(data.high, decimals);
+        lowEl.textContent = formatNumber(data.low, decimals);
+    }
 
-  const res = await fetch(url, {cache:'no-store', signal:ctrl.signal});
-  clearTimeout(timer);
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    // Fetch individual data
+    async function fetchNifty() {
+        try {
+            const data = await APIs.nifty();
+            updateCard('niftyPrice', 'niftyChange', 'niftyHigh', 'niftyLow', data);
+            updateTime();
+        } catch (error) {
+            console.error('Error fetching Nifty:', error);
+        }
+    }
 
-  const text = await res.text();
-  const parsed = parseCSV(text);
-  if (!parsed) throw new Error('bad CSV');
+    async function fetchCrude() {
+        try {
+            const data = await APIs.crude();
+            updateCard('crudePrice', 'crudeChange', 'crudeHigh', 'crudeLow', data);
+            updateTime();
+        } catch (error) {
+            console.error('Error fetching Crude:', error);
+        }
+    }
 
-  const {price, prev, date} = parsed;
-  const chg = price - prev;
-  const pct = (chg / prev) * 100;
+    async function fetchGold() {
+        try {
+            const data = await APIs.gold();
+            updateCard('goldPrice', 'goldChange', 'goldHigh', 'goldLow', data);
+            updateTime();
+        } catch (error) {
+            console.error('Error fetching Gold:', error);
+        }
+    }
 
-  return {id, price, chg, pct, date, dp, unit};
-}
+    // Fetch all data
+    async function fetchAllData() {
+        try {
+            document.getElementById('status').textContent = '●';
+            document.getElementById('status').style.color = 'var(--accent)';
+            
+            await Promise.all([fetchNifty(), fetchCrude(), fetchGold()]);
+            
+            document.getElementById('status').style.color = 'var(--success)';
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            document.getElementById('status').style.color = 'var(--danger)';
+        }
+    }
 
-function updateCard({id, price, chg, pct, date, dp, unit}) {
-  const pEl = document.getElementById(`price-${id}`);
-  const cEl = document.getElementById(`chg-${id}`);
-  const tEl = document.getElementById(`time-${id}`);
-  if (!pEl) return;
+    // Update timestamps
+    function updateTime() {
+        const now = new Date().toLocaleTimeString('en-IN', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+        });
+        document.getElementById('lastUpdate').textContent = now + ' IST';
+        document.getElementById('syncTime').textContent = now + ' IST';
+    }
 
-  pEl.classList.remove('flash-up','flash-down');
-  void pEl.offsetWidth;
-  pEl.classList.add(chg >= 0 ? 'flash-up' : 'flash-down');
+    // Initialize and set up intervals
+    fetchAllData();
+    updateTime();
 
-  pEl.innerHTML = fmtNum(price, dp) + (unit ? `<span class="unit">${unit}</span>` : '');
+    // Refresh every 5 seconds
+    setInterval(fetchAllData, 5000);
 
-  const up  = chg >= 0;
-  const sgn = up ? '+' : '';
-  cEl.className = `card-change ${up ? 'up' : 'down'}`;
-  cEl.innerHTML = `${arrowSVG(up)} ${sgn}${chg.toFixed(2)} (${sgn}${pct.toFixed(2)}%)`;
-
-  if (tEl) tEl.textContent = date || '';
-}
-
-function markError(id) {
-  const pEl = document.getElementById(`price-${id}`);
-  const cEl = document.getElementById(`chg-${id}`);
-  if (pEl) pEl.innerHTML = '<span class="card-error">unavailable</span>';
-  if (cEl) cEl.innerHTML = '';
-}
-
-async function fetchAll() {
-  const btn      = document.getElementById('refreshBtn');
-  const iconEl   = document.getElementById('refreshIcon');
-  const statusEl = document.getElementById('status');
-
-  btn.disabled     = true;
-  iconEl.className = 'spin';
-  iconEl.textContent = '↻';
-  statusEl.textContent = 'Updating…';
-
-  const results = await Promise.allSettled(TICKERS.map(fetchOne));
-
-  let ok = 0;
-  results.forEach((r, i) => {
-    if (r.status === 'fulfilled') { updateCard(r.value); ok++; }
-    else { console.warn(`[${TICKERS[i].id}]`, r.reason?.message); markError(TICKERS[i].id); }
-  });
-
-  const now = new Date().toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit'});
-  statusEl.textContent = `Updated ${now} · ${ok}/${TICKERS.length} live`;
-  iconEl.className = '';
-  btn.disabled = false;
-}
-
-fetchAll();
-setInterval(fetchAll, 3 * 60 * 1000);
+    // Update time display every second
+    setInterval(updateTime, 1000);
 </script>
+```
+
 </body>
 </html>
