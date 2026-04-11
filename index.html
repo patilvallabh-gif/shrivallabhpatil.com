@@ -46,8 +46,15 @@
 
     .subtitle {
         color: #cbd5e1;
-        margin-bottom: 40px;
+        margin-bottom: 10px;
         font-size: 0.95rem;
+    }
+
+    .source {
+        color: #64748b;
+        font-size: 0.8rem;
+        margin-bottom: 30px;
+        font-style: italic;
     }
 
     .price-box {
@@ -110,6 +117,11 @@
         animation: pulse 2s infinite;
     }
 
+    .dot.error {
+        background: #ef4444;
+        animation: none;
+    }
+
     @keyframes pulse {
         0%, 100% { opacity: 0.5; }
         50% { opacity: 1; }
@@ -134,13 +146,19 @@
         margin-top: 20px;
     }
 
-    button:hover {
+    button:hover:not(:disabled) {
         background: #1d4ed8;
         transform: translateY(-2px);
     }
 
-    button:active {
+    button:active:not(:disabled) {
         transform: translateY(0);
+    }
+
+    button:disabled {
+        background: #64748b;
+        cursor: not-allowed;
+        transform: none;
     }
 
     .error {
@@ -151,6 +169,43 @@
         border-radius: 8px;
         margin-top: 15px;
         font-size: 0.9rem;
+        display: none;
+    }
+
+    .success {
+        color: #86efac;
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        padding: 8px;
+        border-radius: 8px;
+        margin-top: 10px;
+        font-size: 0.85rem;
+        display: none;
+    }
+
+    .loading {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(59, 130, 246, 0.3);
+        border-top-color: #3b82f6;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .setup-note {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        margin-top: 20px;
+        display: none;
+        color: #93c5fd;
     }
 
     @media (max-width: 600px) {
@@ -178,89 +233,166 @@
     <div class="container">
         <h1>📈 NASDAQ</h1>
         <p class="subtitle">Composite Index - Live Price</p>
+        <p class="source">Data from CNBC API</p>
 
 ```
     <div class="price-box">
         <div class="price-label">Current Price</div>
-        <div class="price" id="nasdaqPrice">--</div>
-        <div class="change" id="nasdaqChange">
+        <div class="price" id="nasdaqPrice">
+            <div class="loading"></div>
+        </div>
+        <div class="change" id="nasdaqChange" style="display: none;">
             <span>-- (--)</span>
         </div>
     </div>
 
     <div class="status">
-        <div class="dot"></div>
-        <span>Live Updates</span>
+        <div class="dot" id="statusDot"></div>
+        <span id="statusText">Loading data...</span>
     </div>
 
     <div class="timestamp">
         Updated: <span id="timestamp">--:--</span>
     </div>
 
-    <button onclick="refreshPrice()">Refresh Now</button>
+    <button id="refreshBtn" onclick="refreshPrice()">Refresh Now</button>
 
-    <div id="error" style="display: none;"></div>
+    <div id="error" class="error"></div>
+    <div id="success" class="success">✓ Data loaded from CNBC API</div>
+    
+    <div class="setup-note" id="setupNote">
+        ℹ️ <strong>Setup Required:</strong> Add your RapidAPI key in the code<br>
+        Get free key at: <a href="https://rapidapi.com/apidojo/api/cnbc" target="_blank" style="color: #93c5fd; text-decoration: underline;">RapidAPI CNBC</a>
+    </div>
 </div>
 
 <script>
-    // Fetch NASDAQ price
-    async function fetchNASDAQ() {
+    // ⚠️ REPLACE WITH YOUR RAPIDAPI KEY
+    // Get free key from: https://rapidapi.com/apidojo/api/cnbc
+    const RAPIDAPI_KEY = '88f9431f9dmsh8cf9a0bfe337d1dp1a857bjsnbea5335b9d63';
+    const RAPIDAPI_HOST = 'cnbc.p.rapidapi.com';
+
+    let isLoading = false;
+
+    // Fetch NASDAQ data from CNBC API
+    async function fetchNASDAQData() {
         try {
+            if (RAPIDAPI_KEY === 'YOUR_RAPIDAPI_KEY_HERE') {
+                showError('API key not configured. Please add your RapidAPI key.');
+                document.getElementById('setupNote').style.display = 'block';
+                document.getElementById('statusDot').className = 'dot error';
+                document.getElementById('statusText').textContent = 'API key required';
+                return;
+            }
+
+            isLoading = true;
+            document.getElementById('refreshBtn').disabled = true;
+
+            const options = {
+                method: 'GET',
+                headers: {
+                    'x-rapidapi-key': RAPIDAPI_KEY,
+                    'x-rapidapi-host': RAPIDAPI_HOST
+                }
+            };
+
+            // CNBC API endpoint for NASDAQ Composite
             const response = await fetch(
-                'https://query1.finance.yahoo.com/v10/finance/quoteSummary/%5EGSPC?modules=price',
-                { mode: 'cors' }
+                'https://cnbc.p.rapidapi.com/quotes/get?q=%5EGSPC',
+                options
             );
-            
-            if (!response.ok) throw new Error('API error');
-            
+
+            if (!response.ok) {
+                if (response.status === 403) {
+                    throw new Error('Invalid API key or rate limit exceeded');
+                }
+                throw new Error(`API error: ${response.status}`);
+            }
+
             const data = await response.json();
-            const price = data.quoteSummary.result[0].price;
 
-            const priceValue = price.regularMarketPrice.raw;
-            const change = price.regularMarketChange.raw;
-            const changePercent = price.regularMarketChangePercent.raw;
+            // Parse CNBC API response
+            if (data.result && data.result.quotes && data.result.quotes.length > 0) {
+                const quote = data.result.quotes[0];
+                
+                const priceData = {
+                    current: quote.lastPrice,
+                    change: quote.change,
+                    changePercent: quote.percentChange,
+                    timestamp: new Date()
+                };
 
-            // Update DOM
-            document.getElementById('nasdaqPrice').textContent = 
-                priceValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                updateDisplay(priceData);
+                document.getElementById('error').style.display = 'none';
+                document.getElementById('success').style.display = 'block';
+                document.getElementById('setupNote').style.display = 'none';
+                document.getElementById('statusDot').className = 'dot';
+                document.getElementById('statusText').textContent = 'Connected to CNBC API';
 
-            const changeEl = document.getElementById('nasdaqChange');
-            const isPositive = change >= 0;
-            
-            changeEl.className = `change ${isPositive ? 'positive' : 'negative'}`;
-            changeEl.innerHTML = `
-                <span>${isPositive ? '▲' : '▼'} ${Math.abs(change).toFixed(2)} (${isPositive ? '+' : ''}${changePercent.toFixed(2)}%)</span>
-            `;
-
-            // Update timestamp
-            const now = new Date().toLocaleTimeString('en-US', {
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: true
-            });
-            document.getElementById('timestamp').textContent = now;
-
-            // Hide error
-            document.getElementById('error').style.display = 'none';
+            } else {
+                throw new Error('No data in API response');
+            }
 
         } catch (error) {
-            console.error('Error:', error);
-            const errorDiv = document.getElementById('error');
-            errorDiv.textContent = '⚠️ Could not fetch data. Check internet connection.';
-            errorDiv.style.display = 'block';
+            console.error('Fetch error:', error);
+            showError('Error: ' + error.message);
+            document.getElementById('statusDot').className = 'dot error';
+            document.getElementById('statusText').textContent = 'Connection failed';
+        } finally {
+            isLoading = false;
+            document.getElementById('refreshBtn').disabled = false;
         }
     }
 
+    function updateDisplay(data) {
+        const priceEl = document.getElementById('nasdaqPrice');
+        const changeEl = document.getElementById('nasdaqChange');
+
+        const current = parseFloat(data.current).toFixed(2);
+        const change = parseFloat(data.change).toFixed(2);
+        const changePercent = parseFloat(data.changePercent).toFixed(2);
+        const isPositive = data.change >= 0;
+
+        priceEl.textContent = current;
+        priceEl.style.color = '#f1f5f9';
+
+        changeEl.className = `change ${isPositive ? 'positive' : 'negative'}`;
+        changeEl.innerHTML = `
+            <span>${isPositive ? '▲' : '▼'} ${Math.abs(change)} (${isPositive ? '+' : ''}${changePercent}%)</span>
+        `;
+        changeEl.style.display = 'inline-block';
+
+        const now = new Date().toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        });
+        document.getElementById('timestamp').textContent = now;
+    }
+
+    function showError(message) {
+        const errorDiv = document.getElementById('error');
+        errorDiv.textContent = '⚠️ ' + message;
+        errorDiv.style.display = 'block';
+        document.getElementById('success').style.display = 'none';
+    }
+
     function refreshPrice() {
-        fetchNASDAQ();
+        if (!isLoading) {
+            document.getElementById('nasdaqPrice').innerHTML = '<div class="loading"></div>';
+            fetchNASDAQData();
+        }
     }
 
     // Initial fetch
-    fetchNASDAQ();
+    fetchNASDAQData();
 
     // Auto-refresh every 5 seconds
-    setInterval(fetchNASDAQ, 5000);
+    setInterval(() => {
+        if (!isLoading && RAPIDAPI_KEY !== 'YOUR_RAPIDAPI_KEY_HERE') {
+            fetchNASDAQData();
+        }
+    }, 5000);
 </script>
 ```
 
